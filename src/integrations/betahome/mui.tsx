@@ -126,7 +126,8 @@ export const TableApp = qwikify$(() => {
       // }
   
       if (errorList.length < 1) {
-        axios.put(`http://demo0896458.mockable.io/files/update/name=${newData.title}?copies=${newData.copies}&priority=${newData.priority}&filament=${newData.filament}&printer=${newData.for_printer}`)
+        axios.put(`http://demo0896458.mockable.io/files/update`)
+        // axios.put(`http://demo0896458.mockable.io/files/update/name=${newData.title}?copies=${newData.copies}&priority=${newData.priority}&filament=${newData.filament}&printer=${newData.for_printer}`)
           .then(response => {
             // const updateFile = [...user];
             // const index = oldData.id;
@@ -166,7 +167,8 @@ export const TableApp = qwikify$(() => {
     // function for deleting a row
     const handleRowDelete = (oldData, resolve) => {
       // alert(oldData.title);
-      axios.delete(`http://demo0896458.mockable.io/files/delete/name=${oldData.title}`)
+      axios.delete(`http://demo0896458.mockable.io/files/delete`)
+      // axios.delete(`http://demo0896458.mockable.io/files/delete/name=${oldData.title}`)
         .then(response => {
           // const dataDelete = [...oldData];
           console.log(response);
