@@ -1,8 +1,8 @@
-# Sample Mock Endpoints - not complete
+# Sample Mock Endpoints - (you can build your own for testing with https://www.mockable.io/)
 
-- https://mockend.com/marinovsamuil/printers/printers
-- https://mockend.com/samuilmarinov/files/files
-- (you can build your own for testing with mockend.com)
+- http://demo0896458.mockable.io/files
+- http://demo0896458.mockable.io/printers/list
+
 
 
 # Set-up for local testing and preview 
@@ -11,6 +11,13 @@
 - npm run dev 
 - new pages - /betahome and /betaprinters
 
+# Production build
+- npm run build
+- npm run preview
+
+# Dev login details
+- username: "admin",
+- password: "123"
 
 # Qwik App ⚡️
 
