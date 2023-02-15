@@ -13,14 +13,14 @@ export const TableApp = qwikify$(() => {
   
   
  
-  // regex for email validation
-  const validateEmail = (email) => {
-    console.log(email);
+  // // regex for email validation
+  // const validateEmail = (email) => {
+  //   console.log(email);
 
-    return true
-  }
+  //   return true
+  // }
 
-  const [user, setUser] = useState([]);
+  // const [user, setUser] = useState([]);
   const [iserror, setIserror] = React.useState<boolean>(false);
   const [errorMessages, setErrorMessages] = useState([]);
   const [tableData, setTableData] = useState([]);
@@ -94,7 +94,8 @@ export const TableApp = qwikify$(() => {
     files: Object.keys(tableData).map((name, index) => {
       // then with map function you can map all keys
       // and construct your own data structure
-      jsonNames.push(name); 
+      jsonNames.push(name);
+      // @ts-ignore
       window.localStorage.setItem("printqueue", jsonNames);
       return {
         id: index + 1,
@@ -120,9 +121,9 @@ export const TableApp = qwikify$(() => {
     const handleRowUpdate = (newData, oldData, resolve) => {
       //validating the data inputs
       const errorList = []
-      if (newData.name === "") {
-        // errorList.push("Try Again, You didn't enter the name field")
-      }
+      // if (newData.name === "") {
+      //   // errorList.push("Try Again, You didn't enter the name field")
+      // }
   
       if (errorList.length < 1) {
         axios.put(`http://demo0896458.mockable.io/files/update/name=${newData.title}?copies=${newData.copies}&priority=${newData.priority}&filament=${newData.filament}&printer=${newData.for_printer}`)
@@ -153,8 +154,8 @@ export const TableApp = qwikify$(() => {
     }
 
     const removeValueFromList = (list, value) => {
-      let values = list.split(',');
-      let index = values.indexOf(value);
+      const values = list.split(',');
+      const index = values.indexOf(value);
       if (index !== -1) {
         values.splice(index, 1);
       }
@@ -169,6 +170,7 @@ export const TableApp = qwikify$(() => {
         .then(response => {
           // const dataDelete = [...oldData];
           console.log(response);
+          // @ts-ignore
           window.localStorage.setItem("printqueue", removeValueFromList(oldData.title));
           // const index = oldData.id;
           // dataDelete.splice(index, 1);
@@ -236,6 +238,7 @@ export const TableApp = qwikify$(() => {
       
       <MaterialTable
         title="Printer Queue"
+        // @ts-ignore
         columns={columns}
         data={newParsed.files}
         options={{

@@ -1,6 +1,6 @@
 import { component$, useSignal, useStore, $, useOnWindow} from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
-import { TableApp } from '~/integrations/betahome/mui';
+// import { TableApp } from '~/integrations/betahome/mui';
 import { PrinterApp } from '~/integrations/betaprinters/mui';
 import { HeaderLogo } from '~/components/header-logo/header-logo';
 import '~/assets/css/table.min.css';
@@ -33,7 +33,7 @@ export default component$(() => {
 
   const show = useSignal(false);
   const print = useSignal(false);
-  const count = useSignal(0);
+  // const count = useSignal(0);
   const countt = useSignal(0);
 
   // const variant = useSignal<'contained' | 'outlined' | 'text'>('contained');
@@ -43,33 +43,12 @@ export default component$(() => {
     show.value ? show.value = false : show.value = true;
   });
 
-  const printOpen$ = $( async () => {
-    print.value ? print.value = false : print.value = true;
-  });
 
-  const filesClose$ = $( async () => {
-    show.value ? show.value = false : show.value = true;
-    setTimeout(function () {
-      document.getElementById('printersshow').click();
-    }, 200);
-  });
-
-  const printClose$ = $( async () => {
-    print.value ? print.value = false : print.value = true;
-    setTimeout(function () {
-      document.getElementById('printersshow').click();
-    }, 200);
-  });
-
-
-const renderButtonpreinters = (
-    <> 
-      <button id="printersshow" className="bottonnav" onClick$={filesOpen$}></button>
-    </>
- );
-
-
-
+  const renderButtonpreinters = (
+      <> 
+        <button id="printersshow" className="bottonnav" onClick$={filesOpen$}></button>
+      </>
+  );
 
   return (
     <>
@@ -80,11 +59,9 @@ const renderButtonpreinters = (
       <HeaderLogo/>
       <span className="logoutbutton" onClick$={logOut$}> <i class="fa fa-sign-out"></i> Logout</span>
       <div style={{ paddingTop: '5%', marginLeft: '10%', width: '80%' }}>
-      
-      {print.value ? closePrinters : renderButtonpreinters}
-
+      {/* @ts-ignore */}
+      {print.value ? renderButtonpreinters : renderButtonpreinters}
       {show.value && <PrinterApp client:visible>Slider is {countt.value}</PrinterApp>}
-
       </div>
 
     </>

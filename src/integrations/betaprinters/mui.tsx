@@ -19,12 +19,11 @@ import DialogTitle from '@mui/material/DialogTitle/index.js';
 import DialogContent from '@mui/material/DialogContent/index.js';
 import DialogActions from '@mui/material/DialogActions/index.js';
 import CloseIcon from '@mui/icons-material/Close';
-
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Box from '@mui/material/Box/index.js';
+import InputLabel from '@mui/material/InputLabel/index.js';
+import MenuItem from '@mui/material/MenuItem/index.js';
+import FormControl from '@mui/material/FormControl/index.js';
+import Select, { SelectChangeEvent } from '@mui/material/Select/index.js';
 
 export interface DialogTitleProps {
   id: string;
@@ -82,6 +81,7 @@ export const PrinterApp = qwikify$(() => {
     );
   }
   
+  // @ts-ignore
   const [open, setOpen] = React.useState(false);
   const [dialogId, setDialogId] = useState(null);
   
@@ -206,9 +206,9 @@ export const PrinterApp = qwikify$(() => {
                                 UPDATE
                               </Button>
                             </DialogActions>
-                          </BootstrapDialog>  
+                          </BootstrapDialog>
                       </CardContent>
-                      <Grid container justify="flex-end">
+                      <Grid>
                       <Grid item>
                         <Button variant="contained" style={{ fontSize: '0.6rem', marginLeft: '10px', marginBottom: '10px' }}>
                           SET AVAILABLE
