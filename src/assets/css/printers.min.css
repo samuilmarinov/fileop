@@ -1,0 +1,15 @@
+.MuiTypography-gutterBottom, .MuiTypography-colorTextSecondary {
+    font-size:12px !important;
+}
+
+.MuiTypography-h5 {
+    font-size:1rem !important;
+}
+
+.MuiCardContent-root {
+    padding-top:0 !important;
+}
+
+.MuiCardHeader-root {
+    padding-bottom:5px !important;
+}

@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded', function() { setTimeout(function(){ document.body.classList.add('vanilla-preloader'); }, 910 ); });
