@@ -34,6 +34,9 @@ export interface DialogTitleProps {
 
 export const PrinterApp = qwikify$(() => {
 
+  // HIDE ALL CONSOLE ERROR FOR PRODUCTION
+  console.error = () => {};
+
   const [material, setMaterial] = React.useState('');
 
   const handleChange = (event: SelectChangeEvent) => {

@@ -5,13 +5,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MaterialTable from 'material-table';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import IconButton from '@mui/material/IconButton/index.js';
+import ShoppingCart from '@mui/icons-material/ShoppingCart';
 
 
 export const MUIButton = qwikify$(Button);
 export const MUIAlert = qwikify$(Alert);
 export const TableApp = qwikify$(() => {
-  
-  
+
+// HIDE ALL CONSOLE ERROR FOR PRODUCTION
+console.error = () => {};
  
   // // regex for email validation
   // const validateEmail = (email) => {
@@ -51,6 +54,17 @@ export const TableApp = qwikify$(() => {
     </select>
     ) },
     { title: 'STATUS', field: 'status', defaultSort: 'desc' , editable: { disabled: true }},
+    {
+      title: 'Order',
+      filed: 'order',
+      render: rowData => (
+        <div>
+        <IconButton onClick={event => { handleRowGetNumber(rowData.title.split('.')); console.log(event); }}>
+          <ShoppingCart />
+        </IconButton>
+        </div>
+      ),
+    },
     // { title: 'CRAETED', field: 'creation_ts'}
   ]
 
@@ -67,13 +81,13 @@ export const TableApp = qwikify$(() => {
   // }
 
   
-  useEffect(() => {
-      // fetch("https://3dhr.eu.ngrok.io/files")
-      fetch("http://demo0896458.mockable.io/files")
-      .then((data) => data.json())
-      .then((data) => setTableData(data))
-  }, [])
-  console.log(tableData);
+  // useEffect(() => {
+  //     // fetch("https://3dhr.eu.ngrok.io/files")
+  //     fetch("http://demo0896458.mockable.io/files")
+  //     .then((data) => data.json())
+  //     .then((data) => setTableData(data))
+  // }, [])
+  // console.log(tableData);
 
 
   const reloadTableData = () => {
@@ -81,6 +95,22 @@ export const TableApp = qwikify$(() => {
     fetch("http://demo0896458.mockable.io/files")
       .then((data) => data.json())
       .then((data) => setTableData(data))
+  }
+
+  const handleRowGetNumber = (title) => {
+    // fetch("https://3dhr.eu.ngrok.io/files")
+    fetch(`https://3dhr.eu/wp-json/productgetidfromtitle/get_id_from_title?term=${title[0]}&key=0e2bf47a-af69-40de-bd0a-63b0afca9cb7`)
+    .then(response => response.text())
+    .then(data => {
+      // alert(data);
+      const link = 'https://3dhr.eu/wp-admin/post.php?post=' + data + '&action=edit';
+      window.open(link, '_blank');
+    }).catch(error => {
+        console.log(error);
+        setErrorMessages(["Can't find name in orders"])
+        setIserror(true)
+        resolve()
+    })
   }
 
   useEffect(() => {
@@ -99,7 +129,7 @@ export const TableApp = qwikify$(() => {
       window.localStorage.setItem("printqueue", jsonNames);
       return {
         id: index + 1,
-        title: name, // first element 
+        title: name, // first element
         priority: tableData[name]['priority'],
         copies: tableData[name]['copies'],
         printed: tableData[name]['printed'],
@@ -115,7 +145,22 @@ export const TableApp = qwikify$(() => {
   console.log(JSON.stringify(newParsed.files));
 
 
-
+    // const handleRowGetOrder = (rowData) => {
+    //   const titlerow = rowData.title.split('.');
+    //   const title = titlerow[0];
+    //   console.log(title); 
+    //   axios.put('https://3dhr.eu/wp-json/productgetidfromtitle/get_id_from_title?term=${title}&key=0e2bf47a-af69-40de-bd0a-63b0afca9cb7')
+    //   .then(response => {
+    //     console.log(response);
+    //     // const link = 'https://3dhr.eu/wp-admin/post.php?post=' + response + '&action=edit';
+    //     // window.open(link, '_blank');
+    //   }).catch(error => {
+    //       console.log(error);
+    //       setErrorMessages(["Can't find name in orders"])
+    //       setIserror(true)
+    //       resolve()
+    //     })
+    // };
 
     //function for updating the existing row details
     const handleRowUpdate = (newData, oldData, resolve) => {
