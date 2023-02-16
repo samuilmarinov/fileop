@@ -38,10 +38,18 @@ export const PrinterApp = qwikify$(() => {
   console.error = () => {};
 
   const [material, setMaterial] = React.useState('');
+  const [type, setType] = React.useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
     setMaterial(event.target.value as string);
   };
+
+  const handleChangeType = (event: SelectChangeEvent) => {
+    setType(event.target.value as string);
+  };
+
+
+  
 
   const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -97,6 +105,7 @@ export const PrinterApp = qwikify$(() => {
   const handleClickOpen = (id, mat) => {
     setDialogId(id);
     setOpen(true);
+    setType();
     setMaterial(mat);
   };
   
@@ -217,6 +226,21 @@ export const PrinterApp = qwikify$(() => {
                                   <MenuItem value={'ABS'}>ABS</MenuItem>
                                   <MenuItem value={'PLA'}>PLA</MenuItem>
                                   <MenuItem value={'PETG'}>PETG</MenuItem>
+                                </Select>
+                              </FormControl>
+                            </Box>
+                            <Box sx={{ minWidth: 120, maxWidth: 120, marginBottom: 5 }}>
+                              <FormControl fullWidth>
+                                <InputLabel id={"type-select-label"+elem.printer_name}>Type</InputLabel>
+                                <Select
+                                  labelId={"type-select-label"+elem.printer_name}
+                                  id={"type-select"+elem.printer_name}
+                                  value={type}
+                                  label="Type"
+                                  onChange={handleChangeType}
+                                >
+                                  <MenuItem value={'Voron'}>Voron</MenuItem>
+                                  <MenuItem value={'PrusaI3'}>PrusaI3</MenuItem>
                                 </Select>
                               </FormControl>
                             </Box>
