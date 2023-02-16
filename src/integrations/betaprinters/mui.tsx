@@ -24,7 +24,7 @@ import InputLabel from '@mui/material/InputLabel/index.js';
 import MenuItem from '@mui/material/MenuItem/index.js';
 import FormControl from '@mui/material/FormControl/index.js';
 import Select, { SelectChangeEvent } from '@mui/material/Select/index.js';
-import { LinearProgress } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core/index.js';
 
 export interface DialogTitleProps {
   id: string;
@@ -57,7 +57,8 @@ export const PrinterApp = qwikify$(() => {
           width: '100%',
           '& > * + *': {
             marginTop: theme.spacing(2),
-          },
+          }
+
       }
   }));
   
@@ -131,6 +132,7 @@ export const PrinterApp = qwikify$(() => {
     </>
   );
 
+
   const [completed, setCompleted] = React.useState(0);
   React.useEffect(() => {
     function progress() {
@@ -138,11 +140,13 @@ export const PrinterApp = qwikify$(() => {
         prevCompleted >= 100 ? 0 : prevCompleted + 10
       );
     }
-    const timer = setInterval(progress, 500);
+    // const timer = setInterval(progress, 500); // no need to reload this every 500ms, triiggers an unexpected reload when you open the dialog window !
     return () => {
-      clearInterval(timer);
+      // clearInterval(timer); // stop clearing the interval as you dont't need it
     };
   }, []);
+
+
 
   return (
     <>
@@ -181,8 +185,8 @@ export const PrinterApp = qwikify$(() => {
                               <p className="cardp">total time: {elem.total_time}</p>
                               <p className="cardp">filament: {elem.filament_type}</p>
                               <p className="cardp">status: {elem.status}</p>
-                              <p className="cardp">progress: </p>
                               <LinearProgress variant="determinate" value={elem.done_percentage} />
+                              <p className="cardp">progress: {elem.done_percentage}</p> 
                               <p className="cardp">api-key: {elem.api_key}</p>
                             </Typography>
                           <BootstrapDialog
@@ -209,6 +213,7 @@ export const PrinterApp = qwikify$(() => {
                                 >
                                   <MenuItem value={'ABS'}>ABS</MenuItem>
                                   <MenuItem value={'PLA'}>PLA</MenuItem>
+                                  <MenuItem value={'PETG'}>PETG</MenuItem>
                                 </Select>
                               </FormControl>
                             </Box>
