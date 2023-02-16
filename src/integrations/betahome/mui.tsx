@@ -6,7 +6,9 @@ import axios from 'axios';
 import MaterialTable from 'material-table';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import IconButton from '@mui/material/IconButton/index.js';
+import Tooltip from '@mui/material/Tooltip/index.js';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
+import GetAppIcon from '@mui/icons-material/GetApp';
 
 
 export const MUIButton = qwikify$(Button);
@@ -19,7 +21,6 @@ console.error = () => {};
   // // regex for email validation
   // const validateEmail = (email) => {
   //   console.log(email);
-
   //   return true
   // }
 
@@ -55,13 +56,32 @@ console.error = () => {};
     ) },
     { title: 'STATUS', field: 'status', defaultSort: 'desc' , editable: { disabled: true }},
     {
-      title: 'Order',
-      filed: 'order',
+      title: 'File Info',
+      filed: 'info',
       render: rowData => (
         <div>
+        <Tooltip title="Link to order in online store">
         <IconButton onClick={event => { handleRowGetNumber(rowData.title.split('.')); console.log(event); }}>
           <ShoppingCart />
         </IconButton>
+        </Tooltip>
+        <Tooltip title="Download gcode file">
+        <IconButton onClick={event => { 
+          const fileUrl = 'https://3dhr.eu.ngrok.io/files/download/name=' + rowData.title;
+          const link = document.createElement('a');
+          link.href = fileUrl;
+          link.download = rowData.title;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          // downloadGcodefile(rowData.title); 
+          console.log(event); 
+        
+          }}>
+          <GetAppIcon />
+        </IconButton>
+        </Tooltip>
         </div>
       ),
     },
@@ -96,6 +116,25 @@ console.error = () => {};
       .then((data) => data.json())
       .then((data) => setTableData(data))
   }
+
+  
+
+  // const downloadGcodefile = (title) => {
+  //   // fetch("https://3dhr.eu.ngrok.io/files")
+  //   fetch(`https://3dhr.eu.ngrok.io/files/download/name=${title}`)
+  //   .then(response => response.text())
+  //   .then(data => {
+  //     // alert(data);
+  //     const link = 'https://3dhr.eu/wp-admin/post.php?post=' + data + '&action=edit';
+  //     window.open(link, '_blank');
+  //   }).catch(error => {
+  //       console.log(error);
+  //       setErrorMessages(["Can't find name in orders"])
+  //       setIserror(true)
+  //       resolve()
+  //   })
+  // }
+
 
   const handleRowGetNumber = (title) => {
     // fetch("https://3dhr.eu.ngrok.io/files")
