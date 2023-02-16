@@ -148,7 +148,7 @@ console.error = () => {};
         console.log(error);
         setErrorMessages(["Can't find name in orders"])
         setIserror(true)
-        resolve()
+        // resolve()
     })
   }
 
