@@ -50,7 +50,7 @@ console.error = () => {};
         defaultValue={props.value}
         onChange={e => props.onChange(e.target.value)}
       >
-      <option value="Prusal3">Prusal3</option>
+      <option value="PrusaI3">PrusaI3</option>
       <option value="Voron">Voron</option>
     </select>
     ) },
