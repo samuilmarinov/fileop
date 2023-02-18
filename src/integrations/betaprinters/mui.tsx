@@ -102,10 +102,10 @@ export const PrinterApp = qwikify$(() => {
   const [open, setOpen] = React.useState(false);
   const [dialogId, setDialogId] = useState(null);
   
-  const handleClickOpen = (id, mat) => {
+  const handleClickOpen = (id, mat, type) => {
     setDialogId(id);
     setOpen(true);
-    setType();
+    setType(type);
     setMaterial(mat);
   };
   
@@ -182,7 +182,7 @@ export const PrinterApp = qwikify$(() => {
                                 </Avatar>
                               }
                               action={
-                                <IconButton onClick={event => { handleClickOpen(elem.printer_name, elem.filament_type); console.log(event); }} aria-label="settings">
+                                <IconButton onClick={event => { handleClickOpen(elem.printer_name, elem.filament_type, elem.type); console.log(event); }} aria-label="settings">
                                   <SettingsIcon />
                                 </IconButton>
                               }
@@ -200,6 +200,7 @@ export const PrinterApp = qwikify$(() => {
                               <LinearProgress variant="determinate" value={elem.done_percentage} />
                               <p className="cardp">progress: {elem.done_percentage}</p> 
                               <p className="cardp">api-key: {elem.api_key}</p>
+                              <p className="cardp">type: {elem.type}</p>
                             </Typography>
                           <BootstrapDialog
                               key={elem.printer_name}
