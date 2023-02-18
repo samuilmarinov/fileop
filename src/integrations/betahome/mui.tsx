@@ -141,8 +141,9 @@ console.error = () => {};
     fetch(`https://3dhr.eu/wp-json/productgetidfromtitle/get_id_from_title?term=${title[0]}&key=0e2bf47a-af69-40de-bd0a-63b0afca9cb7`)
     .then(response => response.text())
     .then(data => {
-      // alert(data);
-      const link = 'https://3dhr.eu/wp-admin/post.php?post=' + data + '&action=edit';
+      const parsed = JSON.parse(data);
+      // alert(parsed[0]);
+      const link = 'https://3dhr.eu/wp-admin/post.php?post=' + parsed[0] + '&action=edit';
       window.open(link, '_blank');
     }).catch(error => {
         console.log(error);

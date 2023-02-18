@@ -32,6 +32,11 @@ export interface DialogTitleProps {
   onClose: () => void;
 }
 
+export interface ImageProps {
+  id: string;
+  children?: React.ReactNode;
+}
+
 export const PrinterApp = qwikify$(() => {
 
   // HIDE ALL CONSOLE ERROR FOR PRODUCTION
@@ -73,6 +78,44 @@ export const PrinterApp = qwikify$(() => {
       }
   }));
   
+  function ImageDetail(props: ImageProps) {
+    const { id } = props;
+    let url = 'https://media.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif';
+    let filename;
+    let notfound = 'https://cdn-icons-png.flaticon.com/512/1548/1548682.png';
+    if(props.id != null){
+      filename = props.id.split('.')[0];
+      console.log(filename);
+
+      useEffect(() => {
+        axios.get(`https://3dhr.eu/wp-json/productgetidfromtitle/get_id_from_title?term=${filename}&key=0e2bf47a-af69-40de-bd0a-63b0afca9cb7`)
+          .then(res => {
+            const data = res.data;
+            const parsed = JSON.parse(data);
+            const link = parsed[1];
+            console.log('GOT LINK');
+            console.log(link);
+            document.getElementById(filename).src = link;
+          }).catch(error => {
+              // console.log(error);
+              document.getElementById(filename).src = notfound;
+              document.getElementById(filename).style.padding = '20px';
+          })
+      }, [])
+
+    }else{
+      
+      return (
+        <img style={{ padding: '20px' }} src='https://static.thenounproject.com/png/203873-200.png' width='200' height='200'/>
+      );
+
+    }
+
+
+    return (
+      <img id={filename} src={url} width='200' height='200'/>
+    );
+  }
 
   function BootstrapDialogTitle(props: DialogTitleProps) {
     const { children, onClose, ...other } = props;
@@ -190,6 +233,7 @@ export const PrinterApp = qwikify$(() => {
                           subheader={`ip: ${elem.printer_ip}`}
                       />
                       <CardContent>
+                          <ImageDetail id={elem.uploaded_file}/>
                           <Typography variant="subtitle2" gutterBottom>
                               <p className="cardp">name: {elem.printer_name}</p>
                               <p className="cardp filenameprinter">file: {elem.uploaded_file}</p>
@@ -234,8 +278,8 @@ export const PrinterApp = qwikify$(() => {
                               <FormControl fullWidth>
                                 <InputLabel id={"type-select-label"+elem.printer_name}>Type</InputLabel>
                                 <Select
-                                  labelId={"type-select-label"+elem.printer_name}
-                                  id={"type-select"+elem.printer_name}
+                                  labelId={"type-select-label"+elem.type}
+                                  id={"type-select"+elem.type}
                                   value={type}
                                   label="Type"
                                   onChange={handleChangeType}
