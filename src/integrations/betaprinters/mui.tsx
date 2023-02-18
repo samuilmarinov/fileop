@@ -157,6 +157,29 @@ export const PrinterApp = qwikify$(() => {
     setDialogId(null);
   };
   
+
+  const handleStatus = (status) => {
+    // console.log(status);
+    let statustext;
+
+    if(status == 1){
+      statustext = 'IDLE';
+    }
+    if(status == 2){
+      statustext = 'PRINTING';
+    }
+    if(status == 3){
+      statustext = 'PAUSED';
+    }
+    if(status == 4){
+      statustext = 'COMPLETE';
+    }
+    if(status == 5){
+      statustext = 'ERROR';
+    }
+    
+    return statustext;
+  };
   
 
   const classes = useStyles();
@@ -240,7 +263,9 @@ export const PrinterApp = qwikify$(() => {
                               <p className="cardp">time left: {elem.left_time}</p>
                               <p className="cardp">total time: {elem.total_time}</p>
                               <p className="cardp">filament: {elem.filament_type}</p>
-                              <p className="cardp">status: {elem.status}</p>
+                              
+                              <p className="cardp">status: {handleStatus(elem.status)}</p>
+
                               <LinearProgress variant="determinate" value={elem.done_percentage} />
                               <p className="cardp">progress: {elem.done_percentage}</p> 
                               <p className="cardp">api-key: {elem.api_key}</p>
