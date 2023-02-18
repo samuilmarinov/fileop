@@ -113,7 +113,7 @@ export const PrinterApp = qwikify$(() => {
 
 
     return (
-      <img id={filename} src={url} width='200' height='200'/>
+      <img style={{ padding: '20px' }} id={filename} src={url} width='200' height='200'/>
     );
   }
 
