@@ -212,7 +212,7 @@ export const PrinterApp = qwikify$(() => {
 
   const renderLoading = (
     <> 
-      <div className="containerloader"><img className="loader" width="70" src="https://media.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif"/></div>
+      <div className="containerloader"><img className="loader" width="200" src="https://3dhr.eu/wp-content/uploads/2023/loading-printers.gif"/></div>
     </>
   );
 
