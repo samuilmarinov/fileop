@@ -37,6 +37,12 @@ export interface ImageProps {
   children?: React.ReactNode;
 }
 
+
+export interface SelectsProps {
+  id: string;
+  children?: React.ReactNode;
+}
+
 export const PrinterApp = qwikify$(() => {
 
   // HIDE ALL CONSOLE ERROR FOR PRODUCTION
@@ -142,17 +148,48 @@ export const PrinterApp = qwikify$(() => {
   // @ts-ignore
   const [open, setOpen] = React.useState(false);
   const [dialogId, setDialogId] = useState(null);
+
+  const [baudrates, setBaudrates] =  React.useState([]);
+  const [printerports, setPrinterports] =  React.useState([]);
   
   const handleClickOpen = (id, mat, type) => {
     setDialogId(id);
     setOpen(true);
     setType(type);
     setMaterial(mat);
+   
+    console.log('PROPERTIES ID');
+    console.log(id);
+    if(id != ''){
+        axios.options(`https://3dhr.eu.ngrok.io/printers/get_connection_options/name=${id}`)
+        .then(res => {
+            console.log('RESULT');
+            const bratesarray = res.data['baudrates'];
+            const prarray = res.data['ports'];
+            console.log(bratesarray);
+            console.log(prarray);
+
+            setBaudrates(bratesarray);
+            setPrinterports(prarray);
+
+            console.log('NEW');
+            console.log(baudrates);
+            console.log(printerports);
+ 
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    }
+
+
   };
   
   const handleClose = () => {
     setOpen(false);
     setDialogId(null);
+    setPrintportselected('');
+    setBrateselected('');
   };
   
 
@@ -187,9 +224,10 @@ export const PrinterApp = qwikify$(() => {
   const [tableData, setTableData] =  React.useState([]); //useState([]);
 
   const [isLoading, setIsLoading] =  React.useState<boolean>(false); //useState([]);
+  
 
 
-  useEffect(() => {
+  useEffect(() => { 
     setIsLoading(true);
     axios.get(`https://3dhr.eu.ngrok.io/printers/list`)
     // axios.get(`http://demo0896458.mockable.io/printers/list`)
@@ -277,17 +315,54 @@ export const PrinterApp = qwikify$(() => {
     })
   }
 
+  const handleConnect = (printer_name) => {
+    const port = document.getElementById("port-select"+printer_name).innerHTML;
+    const brate = document.getElementById("baudrate-select"+printer_name).innerHTML;
+
+    console.log(brate);
+    console.log(port);
+
+    updateBratePort(printer_name, brate, port);
+    
+
+  }
 
   const handleUpdate = (printer_name) => {
 
     const material = document.getElementById("material-select"+printer_name).innerHTML;
     const type = document.getElementById("type-select"+printer_name).innerHTML;
+
     // alert(material+','+type);
     updateMaterial(printer_name, material);
     updateType(printer_name, type);
+
     setOpen(false);
     setDialogId(null);
+    setPrintportselected('');
+    setBrateselected('');
   }
+
+  const updateBratePort = (printer_name, brate, port) => {
+
+    axios.put(`https://3dhr.eu.ngrok.io/printers/connect/name=${printer_name}?port=${port}&baudrate=${brate}`)
+    .then(res => {
+      
+      if(res['data']['Error'] && res['data']['Error'].length > 1){
+        toastr.error(res['data']['Error']);
+      }
+      
+      if(res['data']['Messege']){
+        toastr.success(res['data']['Messege']);
+      }
+      
+
+    }).catch(error => {
+        console.log(error);
+        // resolve()
+        toastr.error(error);
+    })
+  }
+
   
   const updateMaterial = (printer_name, material) => {
     axios.patch(`https://3dhr.eu.ngrok.io/printers/update/material/name=${printer_name}&material=${material}`)
@@ -331,9 +406,65 @@ export const PrinterApp = qwikify$(() => {
     })
   }
 
+  const [printportselected, setPrintportselected] = React.useState('');
+  const [brateselected, setBrateselected] = React.useState('');
+
   
+  const handleChangePort = (event: SelectChangeEvent) => {
+    setPrintportselected(event.target.value as string);
+  };
+
+  const handleChangeBrate = (event: SelectChangeEvent) => {
+    setBrateselected(event.target.value as string);
+  };
 
 
+
+  function DynamicSelects(props: SelectsProps) {
+    const { id } = props;
+
+    return (
+    <Box sx={{ display: 'flex', minWidth: 340, maxWidth: 340, marginBottom: 5 }}>
+      <FormControl fullWidth style={{ marginRight: '5px'}}>
+        <InputLabel id={"port-select-label"+id}>Port</InputLabel>
+        <Select
+            labelId={"port-select-label"+id}
+            id={"port-select"+id}
+            value={printportselected}
+            label="port"
+            onChange={handleChangePort}
+          >
+            {printerports.map(printerport => (
+              <MenuItem key={printerport} value={printerport}>
+                {printerport}
+              </MenuItem>
+            ))}
+          </Select>
+      </FormControl>
+      <FormControl fullWidth style={{ marginRight: '5px'}}>
+      <InputLabel id={"baudrate-select-label"+id}>Baudrates</InputLabel>
+      <Select
+          labelId={"baudrate-select-label"+id}
+          id={"baudrate-select"+id}
+          value={brateselected}
+          label="baudrate"
+          onChange={handleChangeBrate}
+        >
+          {baudrates.map(baudrate => (
+            <MenuItem key={baudrate} value={baudrate}>
+              {baudrate}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <Button style={{ width:'240px', marginLeft: '5px'}} autoFocus onClick={event => { handleConnect(props.id); console.log(event); }}>
+          CONNECT
+      </Button>
+    </Box>
+
+    );
+  }
+  
   
   return (
     <>
@@ -426,6 +557,7 @@ export const PrinterApp = qwikify$(() => {
                                 </Select>
                               </FormControl>
                             </Box>
+                            <DynamicSelects id={elem.printer_name}/>
                             </DialogContent>
                             <DialogActions>
                             <Button autoFocus onClick={event => { handleUpdate(elem.printer_name); console.log(event); }}>
