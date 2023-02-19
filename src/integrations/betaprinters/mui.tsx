@@ -80,14 +80,12 @@ export const PrinterApp = qwikify$(() => {
   
   function ImageDetail(props: ImageProps) {
     const { id } = props;
-    // let url = 'https://media.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif';
     let url = 'https://3dhr.eu/wp-content/uploads/2023/loading.gif';
     let filename;
     let notfound = 'https://3dhr.eu/wp-content/uploads/2023/unavailable.png';
     if(props.id != null){
       filename = props.id.split('.')[0];
       console.log(filename);
-
       useEffect(() => {
         axios.get(`https://3dhr.eu/wp-json/productgetidfromtitle/get_id_from_title?term=${filename}&key=0e2bf47a-af69-40de-bd0a-63b0afca9cb7`)
           .then(res => {
@@ -97,13 +95,9 @@ export const PrinterApp = qwikify$(() => {
             console.log('GOT LINK');
             console.log(link);
             document.getElementById(filename).src = link;
-            // document.getElementById(filename).style.padding = '0 80px 80px 0';
-            // document.getElementById(filename).style.marginBottom = '-70px';
           }).catch(error => {
               console.log(error);
               document.getElementById(filename).src = notfound;
-              // document.getElementById(filename).style.padding = '0 80px 80px 0';
-              // document.getElementById(filename).style.marginBottom = '-70px';
           })
       }, [])
 
@@ -111,7 +105,6 @@ export const PrinterApp = qwikify$(() => {
       
       return (
         <img src='https://3dhr.eu/wp-content/uploads/2023/available.png' width='200' height='200'/>
-        // <img style={{ padding: '0 80px 80px 0', marginBottom: '-70px' }} src='https://static.thenounproject.com/png/203873-200.png' width='200' height='200'/>
       );
 
     }
@@ -119,7 +112,6 @@ export const PrinterApp = qwikify$(() => {
 
     return (
       <img id={filename} src={url} width='200' height='200'/>
-      // <img style={{ padding: '0 80px 80px 0', marginBottom: '-70px' }} id={filename} src={url} width='200' height='200'/>
     );
   }
 
@@ -178,9 +170,10 @@ export const PrinterApp = qwikify$(() => {
       statustext = 'PAUSED';
     }
     if(status == 4){
-      statustext = 'COMPLETE';
+      statustext = 'COMPLETED';
     }
     if(status == 5){
+      // OCTOPRINT RELATED ERROR
       statustext = 'ERROR';
     }
     
@@ -198,8 +191,8 @@ export const PrinterApp = qwikify$(() => {
 
   useEffect(() => {
     setIsLoading(true);
-    // axios.get(`https://3dhr.eu.ngrok.io/printers/list`)
-    axios.get(`http://demo0896458.mockable.io/printers/list`)
+    axios.get(`https://3dhr.eu.ngrok.io/printers/list`)
+    // axios.get(`http://demo0896458.mockable.io/printers/list`)
       .then(res => {
         const data = res.data;
         const newdata = data.splice(0, 8);
@@ -209,6 +202,19 @@ export const PrinterApp = qwikify$(() => {
       })
   }, [])
 
+
+  const reloadPrintersData = () => {
+    setIsLoading(true);
+    // axios.get(`https://3dhr.eu.ngrok.io/printers/list`)
+    axios.get(`http://demo0896458.mockable.io/printers/list`)
+      .then(res => {
+        const data = res.data;
+        const newdata = data.splice(0, 8);
+        setTableData(newdata);
+        // console.log(tableData);
+        setIsLoading(false);
+      })
+  }
 
   const renderLoading = (
     <> 
@@ -271,6 +277,63 @@ export const PrinterApp = qwikify$(() => {
     })
   }
 
+
+  const handleUpdate = (printer_name) => {
+
+    const material = document.getElementById("material-select"+printer_name).innerHTML;
+    const type = document.getElementById("type-select"+printer_name).innerHTML;
+    // alert(material+','+type);
+    updateMaterial(printer_name, material);
+    updateType(printer_name, type);
+    setOpen(false);
+    setDialogId(null);
+  }
+  
+  const updateMaterial = (printer_name, material) => {
+    axios.patch(`https://3dhr.eu.ngrok.io/printers/update/material/name=${printer_name}&material=${material}`)
+    .then(res => {
+      
+      if(res['data']['Error'] && res['data']['Error'].length > 1){
+        toastr.error(res['data']['Error']);
+      }
+      
+      if(res['data']['Message'] && res['data']['Message'].length > 1){
+        toastr.success(res['data']['Message']);
+        reloadPrintersData();
+      }
+
+
+    }).catch(error => {
+        console.log(error);
+        // resolve()
+        toastr.error(error);
+    })
+  }
+
+  const updateType = (printer_name, type) => {
+    axios.patch(`https://3dhr.eu.ngrok.io/printers/update/type/name=${printer_name}&type=${type}`)
+    .then(res => {
+      
+      if(res['data']['Error'] && res['data']['Error'].length > 1){
+        toastr.error(res['data']['Error']);
+      }
+      
+      if(res['data']['Message'] && res['data']['Message'].length > 1){
+        toastr.success(res['data']['Message']);
+        reloadPrintersData();
+      }
+
+
+    }).catch(error => {
+        console.log(error);
+        // resolve()
+        toastr.error(error);
+    })
+  }
+
+  
+
+
   
   return (
     <>
@@ -329,6 +392,9 @@ export const PrinterApp = qwikify$(() => {
                               Settings {elem.printer_name}
                             </BootstrapDialogTitle>
                             <DialogContent dividers>
+                            <Typography gutterBottom style={{ marginBottom: '20px' }}>
+                              Change printer material and printer type and hit the UPDATE to save your changes. If you simply close the dialog your changes will be discarded.
+                            </Typography>
                             <Box sx={{ minWidth: 120, maxWidth: 120, marginBottom: 5 }}>
                               <FormControl fullWidth>
                                 <InputLabel id={"material-select-label"+elem.printer_name}>Material</InputLabel>
@@ -349,8 +415,8 @@ export const PrinterApp = qwikify$(() => {
                               <FormControl fullWidth>
                                 <InputLabel id={"type-select-label"+elem.printer_name}>Type</InputLabel>
                                 <Select
-                                  labelId={"type-select-label"+elem.type}
-                                  id={"type-select"+elem.type}
+                                  labelId={"type-select-label-element"+elem.printer_name}
+                                  id={"type-select"+elem.printer_name}
                                   value={type}
                                   label="Type"
                                   onChange={handleChangeType}
@@ -360,14 +426,9 @@ export const PrinterApp = qwikify$(() => {
                                 </Select>
                               </FormControl>
                             </Box>
-                              <Typography gutterBottom>
-                                Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-                                dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-                                consectetur ac, vestibulum at eros.
-                              </Typography>
                             </DialogContent>
                             <DialogActions>
-                              <Button autoFocus onClick={handleClose}>
+                            <Button autoFocus onClick={event => { handleUpdate(elem.printer_name); console.log(event); }}>
                                 UPDATE
                               </Button>
                             </DialogActions>
