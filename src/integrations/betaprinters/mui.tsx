@@ -82,7 +82,7 @@ export const PrinterApp = qwikify$(() => {
     const { id } = props;
     let url = 'https://media.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif';
     let filename;
-    let notfound = 'https://cdn-icons-png.flaticon.com/512/1548/1548682.png';
+    let notfound = 'https://3dhr.eu/wp-content/uploads/2023/unavailable.png';
     if(props.id != null){
       filename = props.id.split('.')[0];
       console.log(filename);
@@ -96,24 +96,29 @@ export const PrinterApp = qwikify$(() => {
             console.log('GOT LINK');
             console.log(link);
             document.getElementById(filename).src = link;
+            // document.getElementById(filename).style.padding = '0 80px 80px 0';
+            // document.getElementById(filename).style.marginBottom = '-70px';
           }).catch(error => {
               // console.log(error);
               document.getElementById(filename).src = notfound;
-              document.getElementById(filename).style.padding = '20px';
+              // document.getElementById(filename).style.padding = '0 80px 80px 0';
+              // document.getElementById(filename).style.marginBottom = '-70px';
           })
       }, [])
 
     }else{
       
       return (
-        <img style={{ padding: '20px' }} src='https://static.thenounproject.com/png/203873-200.png' width='200' height='200'/>
+        <img src='https://3dhr.eu/wp-content/uploads/2023/available.png' width='200' height='200'/>
+        // <img style={{ padding: '0 80px 80px 0', marginBottom: '-70px' }} src='https://static.thenounproject.com/png/203873-200.png' width='200' height='200'/>
       );
 
     }
 
 
     return (
-      <img style={{ padding: '20px' }} id={filename} src={url} width='200' height='200'/>
+      <img id={filename} src={url} width='200' height='200'/>
+      // <img style={{ padding: '0 80px 80px 0', marginBottom: '-70px' }} id={filename} src={url} width='200' height='200'/>
     );
   }
 
