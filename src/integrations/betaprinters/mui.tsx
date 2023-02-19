@@ -229,8 +229,8 @@ export const PrinterApp = qwikify$(() => {
 
   useEffect(() => { 
     setIsLoading(true);
-    axios.get(`https://3dhr.eu.ngrok.io/printers/list`)
-    // axios.get(`http://demo0896458.mockable.io/printers/list`)
+    // axios.get(`https://3dhr.eu.ngrok.io/printers/list`)
+    axios.get(`http://demo0896458.mockable.io/printers/list`)
       .then(res => {
         const data = res.data;
         const newdata = data.splice(0, 8);
