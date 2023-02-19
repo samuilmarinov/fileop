@@ -80,7 +80,8 @@ export const PrinterApp = qwikify$(() => {
   
   function ImageDetail(props: ImageProps) {
     const { id } = props;
-    let url = 'https://media.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif';
+    // let url = 'https://media.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif';
+    let url = 'https://3dhr.eu/wp-content/uploads/2023/loading.gif';
     let filename;
     let notfound = 'https://3dhr.eu/wp-content/uploads/2023/unavailable.png';
     if(props.id != null){
@@ -99,7 +100,7 @@ export const PrinterApp = qwikify$(() => {
             // document.getElementById(filename).style.padding = '0 80px 80px 0';
             // document.getElementById(filename).style.marginBottom = '-70px';
           }).catch(error => {
-              // console.log(error);
+              console.log(error);
               document.getElementById(filename).src = notfound;
               // document.getElementById(filename).style.padding = '0 80px 80px 0';
               // document.getElementById(filename).style.marginBottom = '-70px';
@@ -230,7 +231,47 @@ export const PrinterApp = qwikify$(() => {
   }, []);
 
 
+  const handleSetAvailable = (printer_name) => {
+    axios.put(`https://3dhr.eu.ngrok.io/printers/set/available/name=${printer_name}`)
+    .then(res => {
 
+
+      if(res['data']['Error'] && res['data']['Error'].length > 1){
+        toastr.error(res['data']['Error']);
+      }
+      
+      if(res['data']['Message'] && res['data']['Message'].length > 1){
+        toastr.success(res['data']['Message']);
+      }
+
+    }).catch(error => {
+        console.log(error);
+        // resolve()
+        toastr.error(error);
+    })
+  }
+
+  const handleCancel = (printer_name) => {
+    axios.put(`https://3dhr.eu.ngrok.io/printers/cancel/name=${printer_name}`)
+    .then(res => {
+      
+      if(res['data']['Error'] && res['data']['Error'].length > 1){
+        toastr.error(res['data']['Error']);
+      }
+      
+      if(res['data']['Message'] && res['data']['Message'].length > 1){
+        toastr.success(res['data']['Message']);
+      }
+    
+
+    }).catch(error => {
+        console.log(error);
+        // resolve()
+        toastr.error(error);
+    })
+  }
+
+  
   return (
     <>
       <div style={{ height: 400, width: '100%' }}>
@@ -334,10 +375,10 @@ export const PrinterApp = qwikify$(() => {
                       </CardContent>
                       <Grid>
                       <Grid item>
-                        <Button variant="contained" style={{ fontSize: '0.6rem', marginLeft: '10px', marginBottom: '10px' }}>
+                        <Button onClick={event => { handleSetAvailable(elem.printer_name); console.log(event); }} variant="contained" style={{ fontSize: '0.6rem', marginLeft: '10px', marginBottom: '10px' }}>
                           SET AVAILABLE
                         </Button>
-                        <Button variant="contained" style={{ fontSize: '0.6rem', marginLeft: '10px', marginBottom: '10px' }}>
+                        <Button onClick={event => { handleCancel(elem.printer_name); console.log(event); }} variant="contained" style={{ fontSize: '0.6rem', marginLeft: '10px', marginBottom: '10px' }}>
                           CANCEL
                         </Button>
                       </Grid>
