@@ -90,6 +90,9 @@ export const PrinterApp = qwikify$(() => {
     let filename;
     let notfound = 'https://3dhr.eu/wp-content/uploads/2023/unavailable.png';
     if(props.id != null){
+      
+      url = 'https://3dhr.eu/wp-content/uploads/2023/unavailable.png';
+
       filename = props.id.split('.')[0];
       console.log(filename);
       useEffect(() => {
@@ -115,7 +118,7 @@ export const PrinterApp = qwikify$(() => {
 
     }
 
-
+    
     return (
       <img id={filename} src={url} width='200' height='200'/>
     );
